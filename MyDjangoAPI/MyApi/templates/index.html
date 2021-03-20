@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSim+</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/fontawesome-all.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/theme.css' %}">
+
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+    <div class="form-body">
+        <div class="row">
+            <div class="img-holder">
+                <div class="bg"></div>
+                <div class="info-holder">
+                    <h3>Get more things from your Images.</h3>
+                    <img id = "outImage" src="{% static 'images/graphic.svg' %}" alt="">
+                </div>
+            </div>
+            <div class="form-holder">
+                <div class="form-content" style="background-color: #ef940b;">
+                    <div class="form-items">
+                        <div class="website-logo-inside">
+                            <a href="">
+                                <div class="logo">
+                                    <p style="color: white; font-size: 30px;"><b>TechSim+</b></p>
+                                    <p style="color: white; font-size: 20px; margin-top: -27px;">The Art of Learning</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="page-links">
+                            <a href=" " class="active">Play with Images</a>
+                        </div>
+                        <form id = "MyForm" >
+                            {% csrf_token %}
+                            <select class="form-control" id = "Service" name="service" required>
+                                <option value="">Choose Your Services</option>
+                                <option value="Object Detection">Object Detection</option>
+                                <option value="Face Analysis">Face Analysis</option>
+                                <option value="Cel.. Det...">Cel.. Det...</option>
+                            </select><br>
+
+                            <input class="form-control" id = "inputImage" type="file" onchange="ChangeImage(event)" required>
+                            <div class="form-button">
+                                <button id="submit" type="submit" class="ibtn">Play</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function ChangeImage(e) {
+        var image = document.getElementById("outImage");
+        image.src = URL.createObjectURL(e.target.files[0]);
+    }
+</script>
+
+<script>
+    const myForm = document.getElementById("MyForm");
+    const myFile = document.getElementById("inputImage");
+    const myService = document.getElementById("Service");
+
+    const formData = new FormData();
+
+    async function GetDetails(){
+        formData.append("image", myFile.files[0]);
+        formData.append("service", myService.value);
+
+        let response = await fetch("http://127.0.0.1:8000/api/v1/", {
+            method: "post",
+            body: formData
+        });
+        let data = await response.json();
+        if(data.Response == "Match"){
+
+        }else{
+
+        }
+        
+    }
+
+
+
+    myForm.addEventListener("submit", e => {
+        e.preventDefault();
+        GetDetails();
+
+    });
+
+</script>
+
+
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
